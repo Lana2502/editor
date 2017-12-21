@@ -9,9 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.Scanner;
 
-// Вообще хорошо разделять наследование:
-// Отдельно ActionListener, отдельно JFrame, отдельно Main
-// Но в твоем случае, все окей. Просто на будущее
 class Notepad extends JFrame implements ActionListener {
     // Constants
     private Font DEFAULT_FONT = new Font("Sans", Font.BOLD, 32);
@@ -19,20 +16,18 @@ class Notepad extends JFrame implements ActionListener {
     private JTextArea textArea = new JTextArea();
     private JMenuBar menuBar = new JMenuBar();
 
-    // Правильно делать по элементу на каждую строчку.
     private JMenu fileMenu;
     private JMenu editMenu;
     private JMenu helpMenu;
 
-    // Переименуй остальные так же
     private JMenuItem newMenuItem;
-    private JMenuItem open;
-    private JMenuItem save;
-    private JMenuItem close;
-    private JMenuItem cut;
-    private JMenuItem copy;
-    private JMenuItem paste;
-    private JMenuItem about;
+    private JMenuItem openMenuItem;
+    private JMenuItem saveMenuItem;
+    private JMenuItem closeMenuItem;
+    private JMenuItem cutMenuItem;
+    private JMenuItem copyMenuItem;
+    private JMenuItem pasteMenuItem;
+    private JMenuItem aboutMenuItem;
     private JFileChooser fileChooser;
 
     private Notepad() {
@@ -54,32 +49,29 @@ class Notepad extends JFrame implements ActionListener {
         setFont(DEFAULT_FONT);
         menuBar = new JMenuBar();
 
-        // todo Остальные пункты меню переименуй также
         fileMenu = new JMenu("File");
         editMenu = new JMenu("Edit");
         helpMenu = new JMenu("Help");
 
-        // todo: Переименовать остальные так же как newMenuItem
         newMenuItem = new JMenuItem("New");
-        open = new JMenuItem("Open");
-        save = new JMenuItem("Save");
-        close = new JMenuItem("Close");
-        cut = new JMenuItem("Cut");
-        copy = new JMenuItem("Copy");
-        paste = new JMenuItem("Paste");
-        about = new JMenuItem("About");
+        openMenuItem = new JMenuItem("Open");
+        saveMenuItem = new JMenuItem("Save");
+        closeMenuItem = new JMenuItem("Close");
+        cutMenuItem = new JMenuItem("Cut");
+        copyMenuItem = new JMenuItem("Copy");
+        pasteMenuItem = new JMenuItem("Paste");
+        aboutMenuItem = new JMenuItem("About");
 
         fileMenu.add(newMenuItem);
-        fileMenu.add(open);
-        fileMenu.add(save);
-        fileMenu.add(close);
+        fileMenu.add(openMenuItem);
+        fileMenu.add(saveMenuItem);
+        fileMenu.add(closeMenuItem);
 
-        editMenu.add(cut);
-        editMenu.add(copy);
-        editMenu.add(paste);
+        editMenu.add(cutMenuItem);
+        editMenu.add(copyMenuItem);
+        editMenu.add(pasteMenuItem);
 
-        // todo: Ну а где окошко-то? с диалогом "О программе"?
-        helpMenu.add(about);
+        helpMenu.add(aboutMenuItem);
 
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
@@ -88,23 +80,25 @@ class Notepad extends JFrame implements ActionListener {
         setJMenuBar(menuBar);
         add(textAreaScrollPane, BorderLayout.CENTER);
 
-        cut.addActionListener(this);
-        copy.addActionListener(this);
-        paste.addActionListener(this);
+        cutMenuItem.addActionListener(this);
+        copyMenuItem.addActionListener(this);
+        pasteMenuItem.addActionListener(this);
 
         newMenuItem.addActionListener(this);
-        open.addActionListener(this);
+        openMenuItem.addActionListener(this);
 
-        save.addActionListener(this);
-        close.addActionListener(this);
+        saveMenuItem.addActionListener(this);
+        closeMenuItem.addActionListener(this);
+
+        aboutMenuItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "About"));
     }
 
     public void actionPerformed(final ActionEvent ae) {
         if (ae.getSource() == newMenuItem) {
             textArea.setText("");
-        } else if (ae.getSource() == close) {
+        } else if (ae.getSource() == closeMenuItem) {
             System.exit(0);
-        } else if (ae.getSource() == open) {
+        } else if (ae.getSource() == openMenuItem) {
             textArea.setText("");
             int n = fileChooser.showOpenDialog(this);
             if (n == JFileChooser.APPROVE_OPTION) {
@@ -119,7 +113,7 @@ class Notepad extends JFrame implements ActionListener {
                 }
             }
 
-        } else if (ae.getSource() == save) {
+        } else if (ae.getSource() == saveMenuItem) {
             try  (final FileWriter fileWriter = new FileWriter("New Text Document.txt" )) {
                 final BufferedWriter br = new BufferedWriter(fileWriter);
                 final Scanner s = new Scanner(textArea.getText());
@@ -132,11 +126,11 @@ class Notepad extends JFrame implements ActionListener {
                 System.out.println(ie);
             }
 
-        } else if (ae.getSource() == cut) {
+        } else if (ae.getSource() == cutMenuItem) {
             textArea.cut();
-        } else if (ae.getSource() == copy) {
+        } else if (ae.getSource() == copyMenuItem) {
             textArea.copy();
-        } else if (ae.getSource() == paste) {
+        } else if (ae.getSource() == pasteMenuItem) {
             textArea.paste();
         }
     }
